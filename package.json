@@ -1,0 +1,13 @@
+{
+  "name": "gcp-gen-ai-leader-mock-tests",
+  "version": "1.0.0",
+  "description": "Local timed mock tests for Google Generative AI Leader certification",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 8080",
+    "dev": "serve -l 8080"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

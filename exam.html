@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam - Google Cloud Generative AI Leader</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-brand">
+      <a href="index.html" class="header-logo">Home</a>
+      <div>
+        <div class="header-title" id="examTitle">Generative AI Leader</div>
+        <div class="header-subtitle" id="examSubtitle">Mock Test</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="timer" id="timer">90:00</div>
+      <button class="btn btn-danger" id="btnEndExam">End Exam</button>
+    </div>
+  </header>
+
+  <div class="exam-container">
+    <div class="exam-main">
+      <div class="question-area" id="questionArea">
+        <p style="color: var(--text-secondary);">Loading...</p>
+      </div>
+      <div class="question-actions">
+        <button class="btn-mark-review" id="btnMarkReview">
+          <span class="flag-icon" id="flagIcon">&#9873;</span>
+          <span id="markReviewText">Mark for Review</span>
+        </button>
+        <div class="question-nav-buttons">
+          <button class="btn btn-secondary" id="btnPrev">&#8592; Previous</button>
+          <button class="btn btn-primary" id="btnNext">Next &#8594;</button>
+        </div>
+      </div>
+    </div>
+    <div class="nav-panel">
+      <div class="nav-panel-header">
+        <h3>Question Navigator</h3>
+        <div class="nav-summary" id="navSummary"></div>
+      </div>
+      <div class="question-palette">
+        <div class="palette-grid" id="paletteGrid"></div>
+      </div>
+      <div class="palette-legend">
+        <div class="legend-items">
+          <div class="legend-item"><div class="legend-swatch answered"></div> Answered</div>
+          <div class="legend-item"><div class="legend-swatch unanswered"></div> Not Answered</div>
+          <div class="legend-item"><div class="legend-swatch flagged"></div> Marked for Review</div>
+          <div class="legend-item"><div class="legend-swatch current"></div> Current</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="endExamModal">
+    <div class="modal">
+      <h2>Submit Exam?</h2>
+      <p>Review your progress before submitting.</p>
+      <div class="modal-stats">
+        <div class="modal-stat">
+          <div class="modal-stat-value" id="modalAnswered">0</div>
+          <div class="modal-stat-label">Answered</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-value" id="modalUnanswered">0</div>
+          <div class="modal-stat-label">Unanswered</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-value" id="modalMarked">0</div>
+          <div class="modal-stat-label">Marked</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btnReviewQuestions">Review Questions</button>
+        <button class="btn btn-danger" id="btnSubmitExam">Submit Exam</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="timeWarningModal">
+    <div class="modal">
+      <h2 id="timeWarningTitle">&#9888; Time Warning</h2>
+      <p id="timeWarningMessage">You have 10 minutes remaining. Please review your answers.</p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btnContinueWarning">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="timesUpModal">
+    <div class="modal">
+      <h2>&#9200; Time's Up!</h2>
+      <p>Your exam has been automatically submitted.</p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btnViewResults">View Results</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/exam-engine.js"></script>
+</body>
+</html>
