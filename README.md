@@ -6,7 +6,7 @@ Local, timed mock exam practice for the [Google Cloud Generative AI Leader](http
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/gcp-generative-ai-leader-mock-tests.git
+   git clone https://github.com/cluelessog/gcp-generative-ai-leader-mock-tests.git
    ```
 
 2. **Go into the folder**
