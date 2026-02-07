@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Local timed mock tests for Google Generative AI Leader certification",
   "private": true,
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "start": "serve -l 8080",
     "dev": "serve -l 8080"

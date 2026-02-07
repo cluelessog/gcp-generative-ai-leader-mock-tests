@@ -1,12 +1,5 @@
 /* Results Engine - Score ring, section breakdown, answer review (single/multi) */
 
-var SECTION_NAMES = {
-  1: 'Fundamentals of Gen AI',
-  2: "Google Cloud's Gen AI Offerings",
-  3: 'Techniques to Improve Gen AI Model Output',
-  4: 'Business Strategies for a Successful Gen AI Solution'
-};
-
 var ResultsEngine = {
   mockId: null,
   mockTitle: null,
@@ -25,7 +18,7 @@ var ResultsEngine = {
         }
       } catch (err) {}
     }
-    if (!this.mockId) {
+    if (!this.mockId || !MOCK_ID_PATTERN.test(this.mockId)) {
       window.location.href = 'index.html';
       return;
     }
@@ -39,7 +32,7 @@ var ResultsEngine = {
     }
 
     fetch('data/mocks.json')
-      .then(function(r) { return r.json(); })
+      .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(mocks) {
         var mock = mocks.find(function(m) { return m.mockId === ResultsEngine.mockId; });
         ResultsEngine.mockTitle = mock ? mock.title : ResultsEngine.mockId;
@@ -72,6 +65,7 @@ var ResultsEngine = {
       '</div>';
     container.innerHTML = html;
     document.getElementById('resultsTitle').textContent = (this.mockTitle || this.mockId) + ' - Results';
+    this.attachReviewListeners();
     setTimeout(function() { ResultsEngine.animateScoreRing(); }, 100);
   },
 
@@ -88,7 +82,7 @@ var ResultsEngine = {
     return '<div class="score-card">' +
       '<div class="score-ring-container">' +
         '<div class="score-ring">' +
-          '<svg viewBox="0 0 180 180">' +
+          '<svg viewBox="0 0 180 180" role="img" aria-label="Score: ' + r.percentage + '%, ' + r.correct + ' of ' + r.total + ' correct">' +
             '<circle class="score-ring-bg" cx="90" cy="90" r="' + radius + '"/>' +
             '<circle class="score-ring-fill ' + passClass + '" cx="90" cy="90" r="' + radius + '" ' +
               'stroke-dasharray="' + circumference + '" stroke-dashoffset="' + circumference + '" id="scoreRingFill"/>' +
@@ -168,7 +162,7 @@ var ResultsEngine = {
       var userArr = qr.userAnswer || [];
 
       html += '<div class="review-question" id="reviewQ' + i + '">' +
-        '<div class="review-question-header" onclick="ResultsEngine.toggleQuestion(' + i + ')">' +
+        '<div class="review-question-header" role="button" tabindex="0" aria-expanded="false" data-review-index="' + i + '">' +
           '<div class="review-result-icon ' + resultClass + '">' + resultIcon + '</div>' +
           '<div class="review-question-title">Q' + (i + 1) + '. ' + this.escapeHtml((q.questionText || '').substring(0, 120)) + (q.questionText && q.questionText.length > 120 ? '...' : '') + '</div>' +
           '<span class="review-expand-icon">&#9660;</span>' +
@@ -214,11 +208,28 @@ var ResultsEngine = {
     for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
     btn.classList.add('active');
     document.getElementById('reviewList').innerHTML = this.renderReviewQuestions(filter);
+    this.attachReviewListeners();
   },
 
   toggleQuestion: function(index) {
     var el = document.getElementById('reviewQ' + index);
-    if (el) el.classList.toggle('expanded');
+    if (!el) return;
+    el.classList.toggle('expanded');
+    var header = el.querySelector('.review-question-header');
+    if (header) header.setAttribute('aria-expanded', el.classList.contains('expanded'));
+  },
+
+  attachReviewListeners: function() {
+    document.querySelectorAll('.review-question-header').forEach(function(header) {
+      var idx = parseInt(header.getAttribute('data-review-index'), 10);
+      header.addEventListener('click', function() { ResultsEngine.toggleQuestion(idx); });
+      header.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          ResultsEngine.toggleQuestion(idx);
+        }
+      });
+    });
   }
 };
 

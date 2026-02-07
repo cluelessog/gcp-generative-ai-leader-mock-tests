@@ -1,12 +1,5 @@
 /* Exam Engine - Timer, navigation, state, single/multi-select, modals */
 
-var SECTION_NAMES = {
-  1: 'Fundamentals of Gen AI',
-  2: "Google Cloud's Gen AI Offerings",
-  3: 'Techniques to Improve Gen AI Model Output',
-  4: 'Business Strategies for a Successful Gen AI Solution'
-};
-
 var ExamEngine = {
   mockId: null,
   mock: null,
@@ -20,7 +13,7 @@ var ExamEngine = {
   timerInterval: null,
   warningShown10: false,
   warningShown5: false,
-  passingPercentage: 70,
+  passingPercentage: PASSING_PERCENTAGE,
 
   init: function() {
     var params = new URLSearchParams(window.location.search);
@@ -36,7 +29,7 @@ var ExamEngine = {
     }
     var restart = params.get('restart') === '1';
 
-    if (!this.mockId) {
+    if (!this.mockId || !MOCK_ID_PATTERN.test(this.mockId)) {
       window.location.href = 'index.html';
       return;
     }
@@ -47,8 +40,8 @@ var ExamEngine = {
 
     var self = this;
     Promise.all([
-      fetch('data/mocks.json').then(function(r) { return r.json(); }),
-      fetch('data/questions.json').then(function(r) { return r.json(); })
+      fetch('data/mocks.json').then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch('data/questions.json').then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     ]).then(function(arr) {
       var mocks = arr[0];
       var allQuestions = arr[1];
@@ -175,18 +168,29 @@ var ExamEngine = {
     if (q.type === 'multi') {
       html += '<div class="question-multi-hint">Select ' + (q.requiredSelections || q.correctAnswers.length) + ' answers</div>';
     }
-    html += '<div class="question-text">' + this.escapeHtml(q.questionText) + '</div><ul class="options-list">';
+    var listRole = q.type === 'multi' ? 'group' : 'radiogroup';
+    var itemRole = q.type === 'multi' ? 'checkbox' : 'radio';
+    html += '<div class="question-text">' + this.escapeHtml(q.questionText) + '</div><ul class="options-list" role="' + listRole + '" aria-label="Answer options">';
     var self = this;
     q.options.forEach(function(opt) {
       var selected = userAnswer.indexOf(opt.key) !== -1;
       var inputType = q.type === 'multi' ? 'option-checkbox' : 'option-radio';
-      html += '<li class="option-item' + (selected ? ' selected' : '') + '" data-key="' + opt.key + '" onclick="ExamEngine.selectAnswer(\'' + opt.key.replace(/'/g, "\\'") + '\')">' +
+      html += '<li class="option-item' + (selected ? ' selected' : '') + '" data-key="' + opt.key + '" role="' + itemRole + '" aria-checked="' + selected + '" tabindex="0">' +
         '<div class="' + inputType + '"></div>' +
         '<span class="option-key">' + opt.key + '.</span>' +
         '<span class="option-text">' + self.escapeHtml(opt.text) + '</span></li>';
     });
     html += '</ul>';
     document.getElementById('questionArea').innerHTML = html;
+    document.getElementById('questionArea').querySelectorAll('.option-item').forEach(function(item) {
+      item.addEventListener('click', function() { ExamEngine.selectAnswer(item.getAttribute('data-key')); });
+      item.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          ExamEngine.selectAnswer(item.getAttribute('data-key'));
+        }
+      });
+    });
   },
 
   renderPalette: function() {
@@ -202,7 +206,11 @@ var ExamEngine = {
       if (answered) cls += ' answered';
       if (flagged) cls += ' flagged';
       if (current) cls += ' current';
-      html += '<button type="button" class="' + cls + '" data-index="' + i + '">' + (i + 1) + '</button>';
+      var ariaLabel = 'Question ' + (i + 1);
+      if (answered) ariaLabel += ', answered';
+      if (flagged) ariaLabel += ', marked for review';
+      if (current) ariaLabel += ', current';
+      html += '<button type="button" class="' + cls + '" data-index="' + i + '" aria-label="' + ariaLabel + '"' + (current ? ' aria-current="true"' : '') + '>' + (i + 1) + '</button>';
     }
     document.getElementById('paletteGrid').innerHTML = html;
     document.getElementById('paletteGrid').querySelectorAll('button').forEach(function(btn) {

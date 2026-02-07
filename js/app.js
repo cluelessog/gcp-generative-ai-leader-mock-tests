@@ -1,6 +1,8 @@
 /* Dashboard - Load mocks, render test cards, link to exam/results */
 
 (function() {
+  var cachedMocks = [];
+
   function renderTestCards(mocks, results) {
     var grid = document.getElementById('testGrid');
     if (!grid || !mocks || !mocks.length) return;
@@ -41,7 +43,7 @@
       }
 
       var num = (mockId.replace('mock-', '') || 0);
-      var subtitleHtml = mock.subtitle ? '<p class="test-card-subtitle" style="color: var(--text-secondary); font-size: 13px; margin-bottom: 12px;">' + escapeHtml(mock.subtitle) + '</p>' : '';
+      var subtitleHtml = mock.subtitle ? '<p class="test-card-subtitle">' + escapeHtml(mock.subtitle) + '</p>' : '';
       html += '<div class="test-card">' +
         '<div class="test-card-header">' +
           '<div class="test-card-number">' + num + '</div>' +
@@ -73,7 +75,7 @@
         if (!confirm('Reset this test? Your score and progress will be cleared.')) return;
         StorageManager.clearExamState(mockId);
         StorageManager.clearResult(mockId);
-        var mocks = window.__lastMocks || [];
+        var mocks = cachedMocks;
         var results = StorageManager.loadAllResults(mocks.map(function(m) { return m.mockId; }));
         renderTestCards(mocks, results);
         return;
@@ -104,9 +106,9 @@
 
   function init() {
     fetch('data/mocks.json')
-      .then(function(r) { return r.json(); })
+      .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(mocks) {
-        window.__lastMocks = mocks;
+        cachedMocks = mocks;
         var mockIds = mocks.map(function(m) { return m.mockId; });
         var results = StorageManager.loadAllResults(mockIds);
         var grid = document.getElementById('testGrid');

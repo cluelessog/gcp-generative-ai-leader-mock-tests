@@ -14,6 +14,11 @@
   --google-yellow-light: #FEF7E0;
   --google-red: #EA4335;
   --google-red-light: #FCE8E6;
+  --google-red-dark: #C5221F;
+  --google-green-dark: #137333;
+  --google-green-hover: #2E7D43;
+  --google-yellow-dark: #B06000;
+  --google-orange-warning: #E37400;
 
   /* Surfaces */
   --bg-primary: #F8F9FA;
@@ -139,7 +144,7 @@ body {
 }
 
 .timer.warning {
-  color: #E37400;
+  color: var(--google-orange-warning);
   background: var(--google-yellow-light);
   border-color: var(--google-yellow);
 }
@@ -213,7 +218,7 @@ body {
 }
 
 .btn-success:hover {
-  background: #2E7D43;
+  background: var(--google-green-hover);
 }
 
 .btn-lg {
@@ -276,17 +281,17 @@ body {
 
 .badge-green {
   background: var(--google-green-light);
-  color: #137333;
+  color: var(--google-green-dark);
 }
 
 .badge-yellow {
   background: var(--google-yellow-light);
-  color: #B06000;
+  color: var(--google-yellow-dark);
 }
 
 .badge-red {
   background: var(--google-red-light);
-  color: #C5221F;
+  color: var(--google-red-dark);
 }
 
 .badge-gray {
@@ -435,12 +440,12 @@ body {
 
 .test-card-score.passed {
   background: var(--google-green-light);
-  color: #137333;
+  color: var(--google-green-dark);
 }
 
 .test-card-score.failed {
   background: var(--google-red-light);
-  color: #C5221F;
+  color: var(--google-red-dark);
 }
 
 .test-card-actions {
@@ -645,7 +650,7 @@ body {
 .btn-mark-review.marked {
   background: var(--google-yellow-light);
   border-color: var(--google-yellow);
-  color: #B06000;
+  color: var(--google-yellow-dark);
 }
 
 .btn-mark-review .flag-icon {
@@ -962,12 +967,12 @@ body {
 
 .score-result-badge.pass {
   background: var(--google-green-light);
-  color: #137333;
+  color: var(--google-green-dark);
 }
 
 .score-result-badge.fail {
   background: var(--google-red-light);
-  color: #C5221F;
+  color: var(--google-red-dark);
 }
 
 .score-time {
@@ -1131,12 +1136,12 @@ body {
 
 .review-result-icon.correct {
   background: var(--google-green-light);
-  color: #137333;
+  color: var(--google-green-dark);
 }
 
 .review-result-icon.incorrect {
   background: var(--google-red-light);
-  color: #C5221F;
+  color: var(--google-red-dark);
 }
 
 .review-question-title {
@@ -1257,6 +1262,22 @@ body {
 .official-link a { color: var(--google-blue); text-decoration: none; }
 .official-link a:hover { text-decoration: underline; }
 
+/* ========== FOCUS STYLES (ACCESSIBILITY) ========== */
+.btn:focus-visible,
+.option-item:focus-visible,
+.palette-btn:focus-visible,
+.filter-btn:focus-visible,
+.btn-mark-review:focus-visible,
+.review-question-header:focus-visible {
+  outline: 2px solid var(--google-blue);
+  outline-offset: 2px;
+}
+
+.option-item:focus-visible {
+  border-color: var(--google-blue);
+  background: var(--google-blue-light);
+}
+
 /* ========== UTILITY ========== */
 .hidden { display: none !important; }
 .text-center { text-align: center; }
@@ -1264,3 +1285,22 @@ body {
 .mt-lg { margin-top: var(--space-lg); }
 .mb-md { margin-bottom: var(--space-md); }
 .mb-lg { margin-bottom: var(--space-lg); }
+
+/* Dashboard inline style replacements */
+.section-badges {
+  padding: 16px 24px;
+}
+
+.section-badges-inner {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.test-card-subtitle {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
