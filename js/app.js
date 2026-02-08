@@ -22,8 +22,8 @@
         statusHtml = '<span class="badge badge-yellow">In Progress</span>';
         scoreHtml = '<div class="test-card-score"><span>Progress: ' + answeredCount + '/' + mock.questionCount + ' answered</span></div>';
         actionHtml = '<div class="test-card-actions">' +
-          '<a href="/exam.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-primary">Resume</a>' +
-          '<a href="/exam.html?test=' + encodeURIComponent(mockId) + '&restart=1" class="btn btn-secondary">Restart</a>' +
+          '<a href="exam.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-primary">Resume</a>' +
+          '<a href="exam.html?test=' + encodeURIComponent(mockId) + '&restart=1" class="btn btn-secondary">Restart</a>' +
           '</div>';
       } else if (result) {
         var passed = result.percentage >= 70;
@@ -31,14 +31,14 @@
         scoreHtml = '<div class="test-card-score ' + (passed ? 'passed' : 'failed') + '">' +
           '<span>Last: ' + result.correct + '/' + result.total + '</span><strong>' + result.percentage + '%</strong></div>';
         actionHtml = '<div class="test-card-actions">' +
-          '<a href="/exam.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-primary">Retake</a>' +
-          '<a href="/results.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-secondary">Review</a>' +
+          '<a href="exam.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-primary">Retake</a>' +
+          '<a href="results.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-secondary">Review</a>' +
           '<button type="button" class="btn btn-secondary btn-reset" data-mock-id="' + escapeHtml(mockId) + '" title="Clear score and show as Not Started">Reset</button>' +
           '</div>';
       } else {
         statusHtml = '<span class="badge badge-gray">Not Started</span>';
         actionHtml = '<div class="test-card-actions">' +
-          '<a href="/exam.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-primary btn-lg" style="flex:1">Start Test</a>' +
+          '<a href="exam.html?test=' + encodeURIComponent(mockId) + '" class="btn btn-primary btn-lg" style="flex:1">Start Test</a>' +
           '</div>';
       }
 
@@ -83,7 +83,7 @@
       var a = e.target.closest('a');
       if (!a || !grid.contains(a)) return;
       var href = a.getAttribute('href') || '';
-      if (href.indexOf('/exam.html') === -1 && href.indexOf('/results.html') === -1) return;
+      if (href.indexOf('exam.html') === -1 && href.indexOf('results.html') === -1) return;
       e.preventDefault();
       var match = href.match(/test=([^&]+)/);
       if (match) {
